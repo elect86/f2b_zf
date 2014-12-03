@@ -6,6 +6,7 @@ import com.jogamp.opengl.util.Animator;
 import java.awt.Frame;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import javax.media.opengl.GL3;
 import javax.media.opengl.GLAutoDrawable;
 import javax.media.opengl.GLCapabilities;
 import javax.media.opengl.GLEventListener;
@@ -55,7 +56,7 @@ public class Viewer implements GLEventListener {
     private int imageHeight;
     private int[] vbo;
     private int[] ibo;
-//    private Program program;
+    private DepthPeeling depthPeeling;
 
     public Viewer() {
 
@@ -86,7 +87,9 @@ public class Viewer implements GLEventListener {
     @Override
     public void init(GLAutoDrawable glad) {
         
+        GL3 gl3 = glad.getGL().getGL3();
         
+        depthPeeling = new DepthPeeling(gl3);
     }
 
     @Override
@@ -97,6 +100,7 @@ public class Viewer implements GLEventListener {
     @Override
     public void display(GLAutoDrawable glad) {
     
+//        depthPeeling = 
     }
 
     @Override

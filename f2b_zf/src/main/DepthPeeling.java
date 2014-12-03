@@ -71,7 +71,7 @@ public class DepthPeeling {
                 break;
             }
         }
-        drawFinal(gl3);
+//        drawFinal(gl3);
     }
 
     private boolean peelDepth(GL3 gl3) {
