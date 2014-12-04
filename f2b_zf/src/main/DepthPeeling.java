@@ -1,7 +1,16 @@
 package main;
 
+import com.jogamp.opengl.util.GLBuffers;
+import com.jogamp.opengl.util.texture.Texture;
+import com.jogamp.opengl.util.texture.TextureIO;
+import java.io.File;
+import java.io.IOException;
+import java.nio.FloatBuffer;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.media.opengl.GL2;
 import javax.media.opengl.GL3;
+import javax.media.opengl.GLException;
 import main.glsl.Blending;
 import main.glsl.Initing;
 import main.glsl.Peeling;
@@ -30,6 +39,7 @@ public class DepthPeeling {
     private Blending blending;
     private Peeling peeling;
     private Scene scene;
+    private FullscreenQuad fullscreenQuad;
 
     public DepthPeeling(GL3 gl3) {
 
@@ -42,6 +52,8 @@ public class DepthPeeling {
         peeling = new Peeling(gl3, path, "standard_VS.glsl", "peel_FS.glsl");
 
         scene = new Scene(gl3);
+        
+        fullscreenQuad = new FullscreenQuad(gl3);
     }
 
     public void draw(GL3 gl3) {
@@ -98,6 +110,19 @@ public class DepthPeeling {
                             initing.bind(gl3);
                             {
                                 scene.draw(gl3);
+
+//                                gl3.glReadBuffer(GL3.GL_COLOR_ATTACHMENT0);
+//
+//                                FloatBuffer floatBuffer = GLBuffers.newDirectFloatBuffer(128 * 96);
+//
+//                                gl3.glReadPixels(0, 0, 128, 96, GL3.GL_RED, GL3.GL_FLOAT, floatBuffer);
+//                                floatBuffer.rewind();
+//
+//                                for (int i = 0; i < floatBuffer.capacity(); i++) {
+//                                    if (floatBuffer.get(i) != -1) {
+//                                        System.out.println("floatBuffer[" + i + "]: " + floatBuffer.get(i));
+//                                    }
+//                                }
                             }
                             initing.unbind(gl3);
                         }
@@ -274,7 +299,7 @@ public class DepthPeeling {
             gl3.glFramebufferTexture2D(GL3.GL_FRAMEBUFFER, GL3.GL_COLOR_ATTACHMENT3, GL3.GL_TEXTURE_RECTANGLE,
                     textColor[0], 0);
 
-            if (gl3.glCheckFramebufferStatus(fboPeel[0]) != GL3.GL_FRAMEBUFFER_COMPLETE) {
+            if (gl3.glCheckFramebufferStatus(GL3.GL_FRAMEBUFFER) != GL3.GL_FRAMEBUFFER_COMPLETE) {
 
                 System.out.println("fboPeel incomplete!");
             }
@@ -293,7 +318,7 @@ public class DepthPeeling {
             gl3.glFramebufferTexture2D(GL3.GL_FRAMEBUFFER, GL3.GL_COLOR_ATTACHMENT1, GL3.GL_TEXTURE_RECTANGLE,
                     textBlend[1], 0);
 
-            if (gl3.glCheckFramebufferStatus(fboPeel[0]) != GL3.GL_FRAMEBUFFER_COMPLETE) {
+            if (gl3.glCheckFramebufferStatus(GL3.GL_FRAMEBUFFER) != GL3.GL_FRAMEBUFFER_COMPLETE) {
 
                 System.out.println("fboBlend incomplete!");
             }
@@ -304,7 +329,7 @@ public class DepthPeeling {
         gl3.glGenQueries(1, queryId, 0);
     }
 
-    private void delete(GL3 gl3) {
+    public void delete(GL3 gl3) {
 
         if (textDepth != null) {
 

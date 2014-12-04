@@ -17,36 +17,23 @@ import jglm.Mat4;
  * @author gbarbieri
  */
 public class FullscreenQuad {
-    
+
     private int[] objects;
-    
+
     public FullscreenQuad(GL3 gl3) {
-        
+
         objects = new int[Objects.size.ordinal()];
-        
+
         initFullScreenQuad(gl3);
     }
-    
+
     private void initFullScreenQuad(GL3 gl3) {
 
         initVbo(gl3);
 
         initVao(gl3);
-
-//        Mat4 modelToClipMatrix = Jglm.orthographic2D(0, 1, 0, 1);
-
-//        dpFinal.bind(gl3);
-//        {
-//            gl3.glUniformMatrix4fv(dpFinal.getModelToClipMatrixUL(), 1, false, modelToClipMatrix.toFloatArray(), 0);
-//        }
-//        dpFinal.unbind(gl3);
-//
-//        dpBlend.bind(gl3);
-//        {
-//            gl3.glUniformMatrix4fv(dpBlend.getModelToClipMatrixUL(), 1, false, modelToClipMatrix.toFloatArray(), 0);
-//        }
-//        dpBlend.unbind(gl3);
     }
+
     private void initVbo(GL3 gl3) {
 
         float[] vertexAttributes = new float[]{
@@ -55,11 +42,9 @@ public class FullscreenQuad {
             1f, 1f,
             1f, -1f};
 
-//        quadVBO = new int[1];
-//
-//        gl3.glGenBuffers(1, IntBuffer.wrap(quadVBO));
-//
-//        gl3.glBindBuffer(GL3.GL_ARRAY_BUFFER, quadVBO[0]);
+        gl3.glGenBuffers(1, objects, Objects.vbo.ordinal());
+
+        gl3.glBindBuffer(GL3.GL_ARRAY_BUFFER, objects[Objects.vbo.ordinal()]);
         {
             FloatBuffer buffer = GLBuffers.newDirectFloatBuffer(vertexAttributes);
 
@@ -70,12 +55,10 @@ public class FullscreenQuad {
 
     private void initVao(GL3 gl3) {
 
-//        quadVAO = new int[1];
-//
-//        gl3.glBindBuffer(GL3.GL_ARRAY_BUFFER, quadVBO[0]);
-//
-//        gl3.glGenVertexArrays(1, IntBuffer.wrap(quadVAO));
-//        gl3.glBindVertexArray(quadVAO[0]);
+        gl3.glBindBuffer(GL3.GL_ARRAY_BUFFER, objects[Objects.vbo.ordinal()]);
+
+        gl3.glGenVertexArrays(1, objects, Objects.vao.ordinal());
+        gl3.glBindVertexArray(objects[Objects.vao.ordinal()]);
         {
             gl3.glEnableVertexAttribArray(0);
             {
@@ -84,16 +67,15 @@ public class FullscreenQuad {
         }
         gl3.glBindVertexArray(0);
     }
-    
+
 //    public static void main(String[] args){
 //        
 //        Mat4 modelToClipMatrix = Jglm.orthographic(-1, 1, -1, 1, 1, -1);
 //        
 //        modelToClipMatrix.print("modelToClipMatrix");
 //    }
-    
     private enum Objects {
-        
+
         vbo,
         vao,
         size

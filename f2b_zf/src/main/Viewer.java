@@ -24,13 +24,13 @@ import javax.media.opengl.GLProfile;
 public class Viewer implements GLEventListener {
 
     public static Viewer instance;
-    
+
     public static void main(String[] args) {
 
         final Viewer viewer = new Viewer();
 
         instance = viewer;
-        
+
         final Frame frame = new Frame("f2b_zf");
 
         frame.add(viewer.getNewtCanvasAWT());
@@ -60,8 +60,8 @@ public class Viewer implements GLEventListener {
 
     public Viewer() {
 
-        imageWidth = 1024;
-        imageHeight = 768;
+        imageWidth = 128 + (128 - 116 + 4);
+        imageHeight = 96 + (96 - 58);
 
         initGL();
     }
@@ -86,26 +86,34 @@ public class Viewer implements GLEventListener {
 
     @Override
     public void init(GLAutoDrawable glad) {
-        
+        System.out.println("init");
         GL3 gl3 = glad.getGL().getGL3();
-        
+
         depthPeeling = new DepthPeeling(gl3);
     }
 
     @Override
     public void dispose(GLAutoDrawable glad) {
-    
+        System.out.println("dispose");
     }
 
     @Override
     public void display(GLAutoDrawable glad) {
-    
-//        depthPeeling = 
+//        System.out.println("display");
+        GL3 gl3 = glad.getGL().getGL3();
+
+        depthPeeling.draw(gl3);
     }
 
     @Override
     public void reshape(GLAutoDrawable glad, int i, int i1, int i2, int i3) {
-    
+        System.out.println("reshape (" + i + ", " + i1 + ") (" + i2 + ", " + i3 + ")");
+        GL3 gl3 = glad.getGL().getGL3();
+
+        depthPeeling.delete(gl3);
+        depthPeeling.initBuffers(gl3);
+        
+        gl3.glViewport(i, i1, i2, i3);
     }
 
     public GLWindow getGlWindow() {

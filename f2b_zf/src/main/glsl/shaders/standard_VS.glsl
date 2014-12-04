@@ -8,5 +8,5 @@ uniform mat4 camera;
 
 void main()
 {
-    gl_Position = camera * vec4(position, 1.0);
+    gl_Position = mat4(1f) * vec4(position, 1.0);
 }
