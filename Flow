@@ -1,0 +1,21 @@
+Pass 0   currID 0   prevID 1
+
+	(PEEL) INIT
+
+		clear texDepth[1] to (0, 0, 0, 0)
+		
+		clear texDepth[0] to (-1, 0, 0, 0)
+		blendEquation MAX
+		___________
+		|   |\    |
+		|   | \   |
+		|-1 |  \  |
+		|   |-.5\ |
+		|   |____\|
+		|_________|
+		
+	BLEND
+
+		draw to texBlend[0].r, cleared to (0, 0, 0, 0)
+		
+		bind texture0 textDepth[0]   texture1 textBlend[1]
