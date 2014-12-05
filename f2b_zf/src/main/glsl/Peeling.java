@@ -15,12 +15,15 @@ import main.DepthPeeling;
 public class Peeling extends glsl.GLSLProgramObject {
 
     private int cameraUL;
+    private int colorUL;
 
     public Peeling(GL3 gl3, String shadersFilepath, String vertexShader, String fragmentShader) {
 
         super(gl3, shadersFilepath, vertexShader, fragmentShader);
 
         cameraUL = gl3.glGetUniformLocation(getProgramId(), "camera");
+        
+        colorUL = gl3.glGetUniformLocation(getProgramId(), "color"); 
         
         int tex_depthUL = gl3.glGetUniformLocation(getProgramId(), "tex_depth");
         bind(gl3);
@@ -39,5 +42,9 @@ public class Peeling extends glsl.GLSLProgramObject {
 
     public int getCameraUL() {
         return cameraUL;
+    }
+
+    public int getColorUL() {
+        return colorUL;
     }
 }

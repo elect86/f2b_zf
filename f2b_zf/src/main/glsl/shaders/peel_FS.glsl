@@ -49,7 +49,10 @@ void main(void)
 	float	depth;
 
 	depth	 =	    -texture(tex_depth	 , gl_FragCoord.xy).r;
+        //out_frag_depth = vec4(depth, 0, 0, 0);
+
 	count_id = ivec2(texture(tex_count_id, gl_FragCoord.xy).ra);
+        //out_frag_color = vec4(count_id.x, count_id.y, 0, 0);
 	
 	if (gl_FragCoord.z < depth) 
 		discard;
@@ -67,4 +70,5 @@ void main(void)
 		
 	else
 		out_frag_depth.r = -gl_FragCoord.z;
+
 }

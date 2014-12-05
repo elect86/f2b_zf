@@ -52,7 +52,7 @@ public class DepthPeeling {
         peeling = new Peeling(gl3, path, "standard_VS.glsl", "peel_FS.glsl");
 
         scene = new Scene(gl3);
-        
+
         fullscreenQuad = new FullscreenQuad(gl3);
     }
 
@@ -83,7 +83,7 @@ public class DepthPeeling {
                 break;
             }
         }
-//        drawFinal(gl3);
+        drawFinal(gl3);
     }
 
     private boolean peelDepth(GL3 gl3) {
@@ -157,7 +157,37 @@ public class DepthPeeling {
                             gl3.glActiveTexture(GL3.GL_TEXTURE1);
                             gl3.glBindTexture(GL3.GL_TEXTURE_RECTANGLE, textBlend[prevID]);
 
+                            gl3.glUniform4f(peeling.getColorUL(), .5f, .12f, .12f, .34f);
+//                            gl3.glUniform4f(peeling.getColorUL(), 1f, 0f, 0f, 1f);
+
                             scene.draw(gl3);
+
+//                            gl3.glReadBuffer(GL3.GL_COLOR_ATTACHMENT2);
+//
+//                            FloatBuffer floatBuffer = GLBuffers.newDirectFloatBuffer(128 * 96);
+//
+//                            gl3.glReadPixels(0, 0, 128, 96, GL3.GL_RED, GL3.GL_FLOAT, floatBuffer);
+//                            floatBuffer.rewind();
+//
+//                            for (int i = 0; i < floatBuffer.capacity(); i++) {
+//                                System.out.println("floatBuffer[" + i + "]: " + floatBuffer.get(i));
+//                            }
+//                            gl3.glReadBuffer(GL3.GL_COLOR_ATTACHMENT0);
+//
+//                            FloatBuffer floatBuffer = GLBuffers.newDirectFloatBuffer(128 * 96 * 4);
+//
+//                            gl3.glReadPixels(0, 0, 128, 96, GL3.GL_RGBA, GL3.GL_FLOAT, floatBuffer);
+//                            floatBuffer.rewind();
+//
+////                            for (int i = 0; i < floatBuffer.capacity(); i += 4) {
+////                                System.out.println("floatBuffer[" + i + "]: (" + floatBuffer.get(i) + ", "
+////                                        + floatBuffer.get(i + 1) + ")");
+////                            }
+//                            for (int i = 0; i < floatBuffer.capacity(); i += 4) {
+//                                System.out.println("floatBuffer[" + i + "]: (" + floatBuffer.get(i) + ", "
+//                                        + floatBuffer.get(i + 1) + ", " + floatBuffer.get(i + 2)
+//                                        + ", " + floatBuffer.get(i + 3) + ")");
+//                            }
                         }
                         peeling.unbind(gl3);
                     }
@@ -190,7 +220,7 @@ public class DepthPeeling {
             {
                 gl3.glDrawBuffer(GL3.GL_COLOR_ATTACHMENT0 + currID);
 
-                gl3.glColorMaski(currID, true, false, false, false);
+                gl3.glColorMaski(currID, true, false, false, true);
                 {
                     gl3.glClearColor(0f, 0f, 0f, 0f);
                     gl3.glClear(GL3.GL_COLOR_BUFFER_BIT);
@@ -204,6 +234,19 @@ public class DepthPeeling {
                         gl3.glBindTexture(GL3.GL_TEXTURE_RECTANGLE, textBlend[prevID]);
 
                         scene.draw(gl3);
+
+                        gl3.glReadBuffer(GL3.GL_COLOR_ATTACHMENT1);
+
+                        FloatBuffer floatBuffer = GLBuffers.newDirectFloatBuffer(128 * 96 * 4);
+
+                        gl3.glReadPixels(0, 0, 128, 96, GL3.GL_RGBA, GL3.GL_FLOAT, floatBuffer);
+                        floatBuffer.rewind();
+
+                        for (int i = 0; i < floatBuffer.capacity(); i += 4) {
+                            System.out.println("floatBuffer[" + i + "]: (" + floatBuffer.get(i) + ", "
+                                    + floatBuffer.get(i + 1) + ", " + floatBuffer.get(i + 2)
+                                    + ", " + floatBuffer.get(i + 3) + ")");
+                        }
                     }
                     blending.unbind(gl3);
                 }
@@ -217,13 +260,26 @@ public class DepthPeeling {
 
     private void drawFinal(GL3 gl3) {
 
-        gl3.glEnable(GL3.GL_DEPTH_TEST);
-        gl3.glDepthMask(true);
-        {
-            gl3.glBindFramebuffer(GL3.GL_FRAMEBUFFER, 0);
-            gl3.glDrawBuffer(GL3.GL_BACK);
+//        gl3.glEnable(GL3.GL_DEPTH_TEST);
+//        gl3.glDepthMask(true);
+//        {
+//            gl3.glBindFramebuffer(GL3.GL_FRAMEBUFFER, 0);
+//            gl3.glDrawBuffer(GL3.GL_BACK);
+//        }
+        gl3.glBindFramebuffer(GL3.GL_FRAMEBUFFER, fboPeel[0]);
+        gl3.glReadBuffer(GL3.GL_COLOR_ATTACHMENT1);
 
-        }
+        FloatBuffer floatBuffer = GLBuffers.newDirectFloatBuffer(128 * 96 * 4);
+
+        gl3.glReadPixels(0, 0, 128, 96, GL3.GL_RGBA, GL3.GL_FLOAT, floatBuffer);
+        floatBuffer.rewind();
+
+//        for (int i = 0; i < floatBuffer.capacity(); i += 4) {
+//            System.out.println("floatBuffer[" + i + "]: (" + floatBuffer.get(i) + ", "
+//                    + floatBuffer.get(i + 1) + ", " + floatBuffer.get(i + 2)
+//                    + ", " + floatBuffer.get(i + 3) + ")");
+//        }
+        System.out.println("");
     }
 
     public void initBuffers(GL3 gl3) {
