@@ -1,21 +1,90 @@
-Pass 0   currID 0   prevID 1
+Pass 0		currID 0		prevID 1
+
+	clear texBlend[1] to (0, 0, 0, 0)
 
 	(PEEL) INIT
-
-		clear texDepth[1] to (0, 0, 0, 0)
 		
-		clear texDepth[0] to (-1, 0, 0, 0)
-		blendEquation MAX
-		___________
-		|   |\    |
-		|   | \   |
-		|-1 |  \  |
-		|   |-.5\ |
-		|   |____\|
-		|_________|
+		blendEquation GL_MAX
+		
+		clear texDepth[0] to (-1, _, _, _)
+		 _______
+		|   |\  |
+		|   |#\ |	* = (-1, _, _, _)
+		| * |__\|     
+		|_______|	# = (-0.5, _, _, _)
 		
 	BLEND
 
-		draw to texBlend[0].r, cleared to (0, 0, 0, 0)
+		draw to:
+			- texBlend[0].ra, cleared to (0, _, _, 0)
 		
-		bind texture0 textDepth[0]   texture1 textBlend[1]
+		bind:
+			- texture0 textDepth[0]   
+			- texture1 textBlend[1]
+		
+		blendFunc GL_ONE, GL_ONE
+		blendEquation GL_MAX, GL_FUNC_ADD
+		 _______
+		|   |\  |
+		|   |#\ |	* = (0, _, _, 0)
+		| * |__\|     
+		|_______|	# = (1, _, _, gl_PrimitiveID = 0)
+
+currID = 1		prevID = 0
+
+	PEEL
+		
+		draw to:
+			- texDepth[1].r, cleared to (-1, _, _, _) 
+			- texColor, cleared to (0, 0, 0, 0)
+		
+		bind: 
+			- texture0 texDepth[0]   
+			- texture1 texBlend[0]
+			
+		blendEquation GL_MAX
+		
+		float depth:
+		 _______
+		|   |\  |
+		|   |#\ |	* = -1
+		| * |__\|     
+		|_______|	# = 0.5
+		
+		vec2i count_id: 
+		 _______
+		|   |\  |
+		|   |#\ |	* = (0, 0)
+		| * |__\|     
+		|_______|	# = (1, 0)
+		
+		out_frag_color:
+		 _______
+		|   |\  |
+		|   |#\ |	* = (0, 0, 0, 0)
+		| * |__\|     
+		|_______|	# = color
+		
+		out_frag_depth.r:
+		 _______
+		|   |\  |
+		|   |#\ |	* = (-1, _, _, _)
+		| * |__\|     
+		|_______|	# = (-1, _, _, _)
+		
+	BLEND
+		
+		draw to:
+			- texBlend[1].ra, cleared to (0, _, _, 0)
+		
+		bind:
+			- texture0 textDepth[1]   
+			- texture1 textBlend[0]
+		
+		blendFunc GL_ONE, GL_ONE
+		blendEquation GL_MAX, GL_FUNC_ADD
+		 _______
+		|   |\  |
+		|   |#\ |	* = (0, _, _, 0)
+		| * |__\|     
+		|_______|	# = (0, _, _, 0)
