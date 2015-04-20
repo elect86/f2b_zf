@@ -1,16 +1,9 @@
 package main;
 
+import com.jogamp.opengl.GL2;
+import com.jogamp.opengl.GL3;
 import com.jogamp.opengl.util.GLBuffers;
-import com.jogamp.opengl.util.texture.Texture;
-import com.jogamp.opengl.util.texture.TextureIO;
-import java.io.File;
-import java.io.IOException;
 import java.nio.FloatBuffer;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.media.opengl.GL2;
-import javax.media.opengl.GL3;
-import javax.media.opengl.GLException;
 import main.glsl.Blending;
 import main.glsl.Initing;
 import main.glsl.Peeling;

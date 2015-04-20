@@ -1,3 +1,4 @@
+
 /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
@@ -5,7 +6,7 @@
  */
 package main.glsl;
 
-import javax.media.opengl.GL3;
+import com.jogamp.opengl.GL3;
 import main.DepthPeeling;
 
 /**
@@ -22,16 +23,16 @@ public class Peeling extends glsl.GLSLProgramObject {
         super(gl3, shadersFilepath, vertexShader, fragmentShader);
 
         cameraUL = gl3.glGetUniformLocation(getProgramId(), "camera");
-        
-        colorUL = gl3.glGetUniformLocation(getProgramId(), "color"); 
-        
+
+        colorUL = gl3.glGetUniformLocation(getProgramId(), "color");
+
         int tex_depthUL = gl3.glGetUniformLocation(getProgramId(), "tex_depth");
         bind(gl3);
         {
             gl3.glUniform1i(tex_depthUL, DepthPeeling.textUnits.depth.ordinal());
         }
         unbind(gl3);
-        
+
         int tex_count_idUL = gl3.glGetUniformLocation(getProgramId(), "tex_count_id");
         bind(gl3);
         {
